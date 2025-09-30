@@ -1,0 +1,105 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST_MODULEFEDERATION }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Install git if not present
+            if ! command -v git &> /dev/null; then
+              sudo yum install -y git
+            fi
+
+            # Install Node.js if not present
+            if ! command -v node &> /dev/null; then
+              curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+              sudo yum install -y nodejs
+            fi
+
+            # Install Yarn if not present
+            if ! command -v yarn &> /dev/null; then
+              sudo npm install -g yarn
+            fi
+
+            # Install PM2 globally if not present
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            # Install and configure nginx if not present
+            if ! command -v nginx &> /dev/null; then
+              sudo yum install -y nginx
+              sudo systemctl enable nginx
+            fi
+
+            # Configure nginx to serve all micro-frontends
+            if [ ! -f /etc/nginx/conf.d/modulefederation.conf ]; then
+              sudo tee /etc/nginx/conf.d/modulefederation.conf > /dev/null <<'EOF'
+            server {
+                listen 80;
+                server_name _;
+
+                root /var/www/modulefederation;
+
+                # Container app (host)
+                location /container/ {
+                    alias /var/www/modulefederation/packages/container/dist/;
+                    try_files $uri $uri/ /container/index.html;
+                }
+
+                # Marketing micro-frontend
+                location /marketing/ {
+                    alias /var/www/modulefederation/packages/marketing/dist/;
+                    try_files $uri $uri/ /marketing/index.html;
+                }
+
+                # Auth micro-frontend
+                location /auth/ {
+                    alias /var/www/modulefederation/packages/auth/dist/;
+                    try_files $uri $uri/ /auth/index.html;
+                }
+
+                # Dashboard micro-frontend
+                location /dashboard/ {
+                    alias /var/www/modulefederation/packages/dashboard/dist/;
+                    try_files $uri $uri/ /dashboard/index.html;
+                }
+
+                # Default to container
+                location / {
+                    alias /var/www/modulefederation/packages/container/dist/;
+                    try_files $uri $uri/ /index.html;
+                }
+            }
+            EOF
+              sudo systemctl restart nginx
+            fi
+
+            # Create directory and clone repo if not present
+            if [ ! -d /var/www/modulefederation ]; then
+              sudo mkdir -p /var/www
+              cd /var/www
+              sudo git clone https://github.com/N73311/modulefederation.git
+              sudo chown -R ec2-user:ec2-user /var/www/modulefederation
+            fi
+
+            cd /var/www/modulefederation
+            git pull origin master
+            yarn install
+            yarn build:all
+            sudo systemctl reload nginx
