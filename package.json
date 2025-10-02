@@ -8,6 +8,13 @@
     "packages/*"
   ],
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": {
+    "name": "Zachariah Ayers",
+    "email": "zach@meridianvega.com",
+    "company": "Meridian Vega"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "22.20.0"
+  }
 }
