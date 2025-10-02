@@ -25,9 +25,10 @@ jobs:
               sudo yum install -y git
             fi
 
-            # Install Node.js if not present
-            if ! command -v node &> /dev/null; then
-              curl -sL https://rpm.nodesource.com/setup_18.x | sudo bash -
+            # Install Node.js 22 if not present or wrong version
+            NODE_VERSION=$(node -v 2>/dev/null | grep -oP '\d+' | head -1)
+            if [ "$NODE_VERSION" != "22" ]; then
+              curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash -
               sudo yum install -y nodejs
             fi
 
