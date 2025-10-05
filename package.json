@@ -16,5 +16,9 @@
   "license": "Apache-2.0",
   "engines": {
     "node": "22.20.0"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0"
   }
 }

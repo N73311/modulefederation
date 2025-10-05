@@ -11,8 +11,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|woff|svg|eot|ttf)$/i,
-        use: [{ loader: "file-loader" }],
+        test: /\.(png|jpe?g|gif|woff|woff2|svg|eot|ttf)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "[hash][ext][query]"
+        }
       },
       {
         test: /\.vue$/,

@@ -1,10 +1,29 @@
 <template>
   <div class="p-grid p-fluid dashboard">
+    <!-- Framework Integration Banner -->
+    <div class="p-col-12">
+      <div class="integration-banner">
+        <div class="banner-content">
+          <h2>🚀 Vue 3 + PrimeVue Running Inside React!</h2>
+          <p>This dashboard is a Vue 3 application loaded as a remote module into the React host container.</p>
+          <div class="tech-badges">
+            <span class="badge vue">Vue {{ vueVersion }}</span>
+            <span class="badge primevue">PrimeVue 3.x</span>
+            <span class="badge webpack">Webpack Module Federation</span>
+            <span class="badge remote">Remote Module</span>
+          </div>
+          <p class="integration-note">
+            Notice: No iframe, no hacks - just seamless runtime integration. Both frameworks share the same DOM!
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="p-col-12 p-lg-4">
       <div class="card summary">
-        <span class="title">Users</span>
-        <span class="detail">Number of visitors</span>
-        <span class="count visitors">12</span>
+        <span class="title">Active Modules</span>
+        <span class="detail">Currently loaded micro-frontends</span>
+        <span class="count visitors">4</span>
       </div>
     </div>
     <div class="p-col-12 p-lg-4">
@@ -246,7 +265,11 @@
     </div>
     <div class="p-col-12 p-lg-6">
       <div class="card">
+        <h1 style="font-size: 16px">Module Federation Performance Metrics</h1>
         <Chart type="line" :data="lineData" />
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">
+          Real-time metrics showing load times and bundle sizes for each micro-frontend module.
+        </p>
       </div>
     </div>
   </div>
@@ -258,6 +281,7 @@ import 'primevue/resources/primevue.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 
+import { version } from 'vue';
 import Checkbox from 'primevue/checkbox';
 import Panel from 'primevue/panel';
 import Dropdown from 'primevue/dropdown';
@@ -282,6 +306,7 @@ export default {
   },
   data() {
     return {
+      vueVersion: version,
       tasksCheckbox: [],
       dropdownCities: [
         { name: 'New York', code: 'NY' },
@@ -305,28 +330,27 @@ export default {
       selectedProducts: null,
       lineData: {
         labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
+          'Container',
+          'Marketing',
+          'Auth',
+          'Dashboard',
+          'Shared Deps',
+          'Total Bundle',
         ],
         datasets: [
           {
-            label: 'First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
+            label: 'Load Time (ms)',
+            data: [45, 120, 95, 145, 30, 435],
             fill: false,
-            backgroundColor: '#2f4860',
-            borderColor: '#2f4860',
+            backgroundColor: '#61dafb',
+            borderColor: '#61dafb',
           },
           {
-            label: 'Second Dataset',
-            data: [28, 48, 40, 19, 86, 27, 90],
+            label: 'Bundle Size (KB)',
+            data: [234, 156, 98, 189, 342, 1019],
             fill: false,
-            backgroundColor: '#00bb7e',
-            borderColor: '#00bb7e',
+            backgroundColor: '#4fc08d',
+            borderColor: '#4fc08d',
           },
         ],
       },
@@ -567,6 +591,78 @@ $footerBgColor: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
     Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   background-color: #edf0f5;
+
+  .integration-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+    .banner-content {
+      color: white;
+      text-align: center;
+
+      h2 {
+        margin-top: 0;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      }
+
+      p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin-bottom: 1.5rem;
+      }
+
+      .tech-badges {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+
+        .badge {
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-weight: bold;
+          font-size: 0.9rem;
+
+          &.vue {
+            background-color: #4fc08d;
+            color: white;
+          }
+
+          &.primevue {
+            background-color: #41b883;
+            color: white;
+          }
+
+          &.webpack {
+            background-color: #8dd6f9;
+            color: #1d78c1;
+          }
+
+          &.remote {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+          }
+        }
+      }
+
+      .integration-note {
+        font-size: 0.95rem;
+        font-style: italic;
+        opacity: 0.9;
+        background: rgba(255,255,255,0.1);
+        padding: 1rem;
+        border-radius: 6px;
+        margin: 0;
+      }
+    }
+  }
   .summary {
     position: relative;
 

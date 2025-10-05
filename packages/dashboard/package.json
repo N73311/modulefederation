@@ -2,8 +2,8 @@
   "name": "dashboard",
   "version": "1.0.0",
   "scripts": {
-    "start": "webpack serve --config config/webpack.dev.js",
-    "build": "webpack --config config/webpack.prod.js"
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --config config/webpack.dev.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config config/webpack.prod.js"
   },
   "dependencies": {
     "chart.js": "^2.9.4",
@@ -17,10 +17,13 @@
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@vue/compiler-sfc": "^3.0.2",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "babel-loader": "^8.1.0",
-    "css-loader": "^5.0.0",
+    "css-loader": "^6.8.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "postcss": "^8.4.31",
     "sass": "^1.93.2",
     "sass-loader": "^10.0.4",
     "style-loader": "^2.0.0",

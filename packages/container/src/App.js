@@ -6,6 +6,7 @@ import React, { lazy, Suspense, useState, useEffect } from "react";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import Header from "./components/Header";
 import Progress from "./components/Progress";
+import ModuleFederationExplorer from "./components/ModuleFederationExplorer";
 import { createBrowserHistory } from "history";
 
 const MarketingModuleLazy = lazy(() => import("./components/MarketingModule"));
@@ -43,6 +44,7 @@ const App = () => {
             <Route path={"/"} component={MarketingModuleLazy} />
           </Switch>
         </Suspense>
+        <ModuleFederationExplorer />
       </StylesProvider>
     </Router>
   );
